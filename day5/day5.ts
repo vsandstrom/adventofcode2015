@@ -1,4 +1,7 @@
 import {readFileSync} from "fs";
+import assert = require('assert');
+
+
 let data: String = readFileSync("./input.txt", 'utf8') || '';
 let words: Array<String> = data.split(/\r?\n/);
 
@@ -32,7 +35,7 @@ const checkDouble: Function = (word: string) => {
     return false;
 }
 
-const checkBad = (word: String) => {
+const checkBad = (word: string) => {
     for (const b of bad) {
         if (word.includes(b)) {
             return false;
@@ -43,21 +46,69 @@ const checkBad = (word: String) => {
     return true;
 }
 
+const checkAlternating: Function = (word: string) => {
+    let i = 0;
+    for (let char of word.split('')){
+        if (char == word[i+2]) {
+            return checkDuplicatePairs(word);
+        }
+        i++;
+        if (i > word.length - 2) {
+            return false;
+        }
+    }
+}
+
+const checkDuplicatePairs: Function = (word: string) => {
+    for (let i = 0; i < word.length -1; i++) {
+        let cursor = word.substring(i, i + 2);
+        let beg = word.substring(0, i);
+        let end = word.substring(i+2);
+
+        if (beg.includes(cursor) || end.includes(cursor)){
+            return true;
+        }
+    }
+    return false;
+}
+
+const rule_set1: Function = (word: string) => {
+    if (checkDouble(word) && checkVowels(word) && checkBad(word)) {
+        return true;
+    }
+    return false;
+}
+
+const rule_set2 : Function = (word: string) => {
+    if (checkAlternating(word) ) {
+        return true;
+    }
+    return false;
+        // alternating repeating letters
+}
+
 
 // console.log(words[2]);
-let nice = 0;
-let naughty = 0;
+let nice_1 = 0;
+let nice_2 = 0;
 
 for (let word of words) {
 
-    if ( checkDouble(word) && checkVowels(word) && checkBad(word)){
-        nice++;
+    if ( rule_set1(word) ){
+        nice_1++;
     }
-    // } else {
-    //     naughty++;
-    // }
+
+    // create set of all substrings
+    if ( rule_set2(word)) {
+        nice_2++;
+    }
 
 }
 
-console.log(nice)
+console.log("Total words: " + words.length);
 
+console.log("There are " + nice_1 + " from the first set of rules");
+console.log("There are " + nice_2 + " from the second set of rules");
+
+// assert(checkAlternating("qjhvhtzxzqqjkmpb") ==  true, "qjhvhtzxzqqjkmpb is nice");
+// assert(rule_set2("uurcxstgmygtbstg") ==  false, "uurcxstgmygtbstg is naughty");
