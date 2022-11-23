@@ -1,8 +1,9 @@
+
 import {readFileSync} from "fs";
-import assert = require('assert');
-
-
 let data: String = readFileSync("./input.txt", 'utf8') || '';
+
+console.log("||---------------------|| DAY 5 ||---------------------||");
+
 let words: Array<String> = data.split(/\r?\n/);
 
 let bad = ["ab", "cd", "pq", "xy"];
@@ -112,3 +113,5 @@ console.log("There are " + nice_2 + " from the second set of rules");
 
 // assert(checkAlternating("qjhvhtzxzqqjkmpb") ==  true, "qjhvhtzxzqqjkmpb is nice");
 // assert(rule_set2("uurcxstgmygtbstg") ==  false, "uurcxstgmygtbstg is naughty");
+
+console.log("||-----------------------------------------------------||");
