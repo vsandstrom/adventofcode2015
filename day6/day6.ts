@@ -2,14 +2,10 @@ import {readFileSync} from "fs";
 import {calc as lightsCalc} from "./lights";
 import {calc as brightCalc} from "./brightness";
 
-import {Instruction, Action} from "./utils";
+import {Instruction, Action, OnOff} from "./utils";
 let data: string = readFileSync("./input.txt", 'utf8') || '';
 
-
 console.log("||---------------------|| DAY 6 ||---------------------||");
-
-
-
 
 let xmasLights = [];
 let xmasBrightness = [];
@@ -22,16 +18,6 @@ for (let i = 0; i < 1000; i++){
         xmasBrightness[i][j]=0;
     }
 }
-
-
-
-// zero the array - all lights are off
-// for (let i = 0; i< 1000; ++i) {
-//     for (let j = 0; j < 1000; ++j) {
-//         xmas[i][j] = 0;
-//     }
-// }
-
 
 const parseCoord: Function = (word: string) => {
     let temp = word.split(',');
@@ -50,7 +36,7 @@ let parsed: Array<Instruction> = instruction.map((line: string, i: number) => {
         let inst: Instruction = {
             index: i,
             action: Action.TURN,
-            onOff: (temp[1] == "on") ? 1 : 0,
+            onOff: (temp[1] == "on") ? OnOff.ON : OnOff.OFF,
             begin: parseCoord(temp[2]),
             end: parseCoord(temp[4])
         };
@@ -67,23 +53,7 @@ let parsed: Array<Instruction> = instruction.map((line: string, i: number) => {
     }
 });
 
-// all instructions should be here, does it matter which order?
-// console.log( parsed.length == instruction.length);
-
-
-
-
-
 console.log("The number of lit lights are: " + lightsCalc(xmasLights, parsed));
 console.log("The total brightness of lit lights are: " + brightCalc(xmasBrightness, parsed));
-
-
-// make sure each begin coord is always less than end coord
-// parsed.forEach((obj) => {
-//     if (obj.begin.x > obj.end.x || obj.begin.y > obj.end.y){
-//         console.log( false );
-//     }
-// })
-
 
 console.log("||-----------------------------------------------------||");

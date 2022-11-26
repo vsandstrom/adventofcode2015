@@ -1,4 +1,4 @@
-import {Instruction, Action} from "./utils";
+import {Instruction, Action, OnOff} from "./utils";
 
 const toggle: Function = (inst: Instruction, array: Array<Array<number>>) => {
         let latOffset = inst.begin.lat, longOffset = inst.begin.long;
@@ -8,7 +8,7 @@ const toggle: Function = (inst: Instruction, array: Array<Array<number>>) => {
 
         for (let i = latOffset; i < (latOffset + latLen + 1); i++) {
             for (let j = longOffset; j < (longOffset + longLen + 1); j++) {
-                array[i][j] = (array[i][j] == 0) ? 1 : 0;
+                array[i][j] = (array[i][j] == OnOff.OFF) ? OnOff.ON : OnOff.OFF;
             }
         }
         return array;
