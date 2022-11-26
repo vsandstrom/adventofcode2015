@@ -1,37 +1,25 @@
 import {readFileSync} from "fs";
+import {calc as lightsCalc} from "./lights";
+import {calc as brightCalc} from "./brightness";
+
+import {Instruction, Action} from "./utils";
 let data: string = readFileSync("./input.txt", 'utf8') || '';
+
 
 console.log("||---------------------|| DAY 6 ||---------------------||");
 
-enum Action {
-    TURN,
-    TOGGLE,
-}
 
-interface Coord {
-    lat: number;
-    long: number;
-}
 
-enum OnOff {
-    OFF = 0,
-    ON = 1
-}
 
-interface Instruction {
-    index: number;
-    action: Action.TURN | Action.TOGGLE;
-    onOff: OnOff.ON | OnOff.OFF | null;
-    begin: Coord;
-    end: Coord;
-}
-
-let xmas = [];
+let xmasLights = [];
+let xmasBrightness = [];
 
 for (let i = 0; i < 1000; i++){
-    xmas[i] = [];
+    xmasLights[i] = [];
+    xmasBrightness[i] = [];
     for (let j = 0; j < 1000; j++){
-        xmas[i][j]=0;
+        xmasLights[i][j]=0;
+        xmasBrightness[i][j]=0;
     }
 }
 
@@ -82,58 +70,12 @@ let parsed: Array<Instruction> = instruction.map((line: string, i: number) => {
 // all instructions should be here, does it matter which order?
 // console.log( parsed.length == instruction.length);
 
-const turn: Function = (inst: Instruction, array: Array<Array<number>>) => {
-    let latOffset = inst.begin.lat, longOffset = inst.begin.long;
-
-    let latLen = Math.abs(inst.end.lat - latOffset);
-    let longLen = Math.abs(inst.end.long - longOffset);
-
-    for (let i = latOffset; i < (latOffset + latLen + 1); i++) {
-        for (let j = longOffset; j < (longOffset + longLen + 1); j++) {
-            array[i][j] = inst.onOff;
-        }
-    }
-    
-    return array;
-}
-
-const toggle: Function = (inst: Instruction, array: Array<Array<number>>) => {
-    let latOffset = inst.begin.lat, longOffset = inst.begin.long;
-
-    let latLen = Math.abs(inst.end.lat - latOffset);
-    let longLen = Math.abs(inst.end.long - longOffset);
-
-    for (let i = latOffset; i < (latOffset + latLen + 1); i++) {
-        for (let j = longOffset; j < (longOffset + longLen + 1); j++) {
-            array[i][j] = (array[i][j] == 0) ? 1 : 0;
-        }
-    }
-    return array;
-}
-
-const calc: Function = (array: Array<Array<number>>, parsed: Array<Instruction>) => {
-    for (let i = 0; i < parsed.length; i++) {
-        if (parsed[i].action == Action.TURN) {
-            array = turn(parsed[i], array);
-        } else if (parsed[i].action == Action.TOGGLE) {
-            array = toggle(parsed[i], array);
-        }
-        else {
-            continue;
-        }
-    }
-
-    let count = 0;
-    for (let i = 0; i < array.length; i++) {
-        count += array[i].reduce((acc, curr) => {
-            return  acc + curr;
-        }, 0)
-    }
-    return count;
-}
 
 
-console.log("The number of lit lights are: " + calc(xmas, parsed));
+
+
+console.log("The number of lit lights are: " + lightsCalc(xmasLights, parsed));
+console.log("The total brightness of lit lights are: " + brightCalc(xmasBrightness, parsed));
 
 
 // make sure each begin coord is always less than end coord
